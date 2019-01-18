@@ -2,7 +2,7 @@
 This is the project repo for the W19 CS230 Deep Learning course at Stanford.
 # Resources
 * Papers
-    * [Original YOLO, 2015](https://arxiv.org/pdf/1506.02640.pdf), [YOLO 9000, 2017](http://openaccess.thecvf.com/content_cvpr_2017/papers/Redmon_YOLO9000_Better_Faster_CVPR_2017_paper.pdf), [YOLO v3, 2018](https://arxiv.org/pdf/1804.02767.pdf)
+    * [Original YOLO (2015)](https://arxiv.org/pdf/1506.02640.pdf), [YOLO 9000 (2017)](http://openaccess.thecvf.com/content_cvpr_2017/papers/Redmon_YOLO9000_Better_Faster_CVPR_2017_paper.pdf), [YOLO v3 (2018)](https://arxiv.org/pdf/1804.02767.pdf)
     * [SSD: Single Shot MultiBox Detector](https://arxiv.org/pdf/1512.02325.pdf)
     * [MobileNet](https://arxiv.org/pdf/1704.04861.pdf)
     * [SqueezeNet](https://arxiv.org/pdf/1602.07360.pdf)
@@ -24,4 +24,4 @@ This is the project repo for the W19 CS230 Deep Learning course at Stanford.
     
 * Example code
     * [nexus-kgp, RCNN (PyTorch)](https://github.com/nexus-kgp/RCNN/blob/master/RCNN.py)
-    * [JimLee4530, RCNN (PyTorch)](https://github.com/JimLee4530/RCNN)
+    * [JimLee4530, RCNN (PyTorch and Keras)](https://github.com/JimLee4530/RCNN)
