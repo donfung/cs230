@@ -30,25 +30,25 @@ Results:
 3. We have roughly emulated the performance of the SORT algorithm paper (in the references) to help us have an idea of what is a really good metric to try and beat (the SORT algorithm was one of the best open source algorithms for object tracking in the MOT benchmark) 
 
 Our Results: 
-                   Rcll   Prcn    GT   MT  PT    ML   FP    FN  IDs   FM   MOTA   MOTP
-TUD-Campus        73.5%   82.2%    8   4    4    0    57    95   0    26   57.7%  0.269
-ETH-Sunnyday      84.1%   71.8%   30  16   12    2   613   295   0   107   51.1%  0.273
-Venice-2          44.1%   58.7%    1   0    1    0  2258  4069   0   599   13.1%  0.320
-ETH-Pedcross2     58.2%   79.2%  133  33   56   44   958  2621   0   281   42.9%  0.265
-ADL-Rundle-8      50.2%   65.5%   28   9   16    3  1796  3376   0   531   23.8%  0.307
-KITTI-17          73.4%   84.6%    9   2    7    0    91   182   0    39   60.0%  0.290
+                   Rcll   Prcn    GT   MT  PT    ML   FP    FN  IDs   FM   MOTA   MOTP  
+TUD-Campus        73.5%   82.2%    8   4    4    0    57    95   0    26   57.7%  0.269  
+ETH-Sunnyday      84.1%   71.8%   30  16   12    2   613   295   0   107   51.1%  0.273  
+Venice-2          44.1%   58.7%    1   0    1    0  2258  4069   0   599   13.1%  0.320  
+ETH-Pedcross2     58.2%   79.2%  133  33   56   44   958  2621   0   281   42.9%  0.265  
+ADL-Rundle-8      50.2%   65.5%   28   9   16    3  1796  3376   0   531   23.8%  0.307  
+KITTI-17          73.4%   84.6%    9   2    7    0    91   182   0    39   60.0%  0.290  
 
-Note: MOTP should be calculated as (1-MOTP)*100 because of the implementation of the benchmark script in python 
+Note: MOTP should be calculated as (1-MOTP)*100 because of the implementation of the benchmark script in python  
 
-These are very close to the benchmarks reported in the SORT paper: 
+These are very close to the benchmarks reported in the SORT paper:  
 
-Sequence	    Rcll	Prcn	FAR	   GT  MT   PT  ML	FP    FN     IDs  FM	MOTA MOTP 
-TUD-Campus	  68.5	94.3	0.21	  8   6    2   0	15    113     6    9	62.7 73.7 
-ETH-Sunnyday	77.5	81.9	0.90	 30  11   16   3	319   418    22   54	59.1 74.4 
-ETH-Pedcross2	51.9	90.8	0.39	133  17   60  56	330  3014    77   103	45.4 74.8 
-ADL-Rundle-8	44.3	75.8	1.47	 28   6   16   6	959  3781   103   211	28.6 71.1 
-Venice-2	    42.5	64.8	2.75	 26   7    9  10	1650 4109    57   106	18.6 73.4 
-KITTI-17	    67.1	92.3	0.26	  9   1    8   0	38    225     9    16	60.2 72.3 
+Sequence	    Rcll	Prcn	FAR	   GT  MT   PT  ML	FP    FN     IDs  FM	MOTA MOTP    
+TUD-Campus	  68.5	94.3	0.21	  8   6    2   0	15    113     6    9	62.7 73.7   
+ETH-Sunnyday	77.5	81.9	0.90	 30  11   16   3	319   418    22   54	59.1 74.4   
+ETH-Pedcross2	51.9	90.8	0.39	133  17   60  56	330  3014    77   103	45.4 74.8   
+ADL-Rundle-8	44.3	75.8	1.47	 28   6   16   6	959  3781   103   211	28.6 71.1   
+Venice-2	    42.5	64.8	2.75	 26   7    9  10	1650 4109    57   106	18.6 73.4   
+KITTI-17	    67.1	92.3	0.26	  9   1    8   0	38    225     9    16	60.2 72.3   
 
 
 
