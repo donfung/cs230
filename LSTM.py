@@ -48,6 +48,7 @@ optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 hist = np.zeros(num_epochs)
 
 # Actual Training
+# Load the array tot from InputRNN code
 uid=np.unique(tot[:,1])
 for t in range(num_epochs):
     print (t)
