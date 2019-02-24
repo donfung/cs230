@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import math
 from shapely.geometry import Polygon
+import time
 
 # Loads input data
 data_input = []
@@ -46,7 +47,7 @@ bb = np.array(data_input)
 bb = np.delete(bb,1,1)
 frames = np.unique(gt_np[:,0])
 
-# 
+start=time.time()
 mix = np.zeros(11)
 for i in bb:
     poss = gt_np[gt_np[:,0] == i[0]]
@@ -54,13 +55,16 @@ for i in bb:
     k = []
     for j in poss:
         iouV= iou_calc(i[1:5],j[2:6])
-        if iouV>0.5 and iouV>=max:
+        if iouV>=0.5 and iouV>=max:
             max = iouV 
             k = j
     if k != []:
-        jo = np.hstack((k,i[1:5],np.array([max])))
+        jo = np.hstack((k,i[1:5]))
         mix=np.vstack((mix,jo))
-        
+elapsed=time.time()-start       
 idx = np.argsort(mix[:,1], kind = "stable")
 gt = mix[idx]
+
+
+
         
