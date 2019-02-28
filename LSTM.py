@@ -23,11 +23,12 @@ class bboxLSTM(nn.Module):
         lstm_out, self.hidden = self.lstm(input)  
            
         # Passing info from last timestep
-        # Should we be Adding input for skip connection (y_pred only learns the difference)?
-        y_pred = self.linear(lstm_out[-1].view(self.batch_size, -1))
+        # Not adding skip connection because the difference between output and input is not constant over the sequence
+        y_pred = self.linear(lstm_out[-1].view(self.batch_size, -1)) 
         
         return y_pred.view(-1)
 
+# will have to change these values according to the dimensions of higher level features we feed into the RNN
 num_epochs = 100
 lstm_input_size = 4
 h1 = 4
@@ -40,18 +41,25 @@ learning_rate = 0.001
 model = bboxLSTM(lstm_input_size, h1, batch_size, output_dim, num_layers)
 
 # What is size_average?
-loss_fn = torch.nn.MSELoss(size_average=False)
+loss_fn = torch.nn.MSELoss(reduction='mean')
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 hist = np.zeros(num_epochs)
+tot = tot [1:len(tot),:]
+
 
 # Actual Training
 # Load the array tot from InputRNN code
+
+# The array tot has been arranged by object IDs so finding all the rows corresponding to one objectID will give all the frames 
+# of the ground truth and detection for that ID
 uid=np.unique(tot[:,1])
+
+# Running loop for num_epochs
 for t in range(num_epochs):
-    print (t)
+# Feeding in one sequence (a single object ID)
     for id in uid:
         mat = tot[tot[:,1] == id]
         X = torch.from_numpy(mat[:,6:10]).type(torch.Tensor)
@@ -59,6 +67,8 @@ for t in range(num_epochs):
         X = X.view((-1,1,X.shape[1]))
         Y = Y.view((-1,1,X.shape[1]))  
         Y_pred = model(X)    
+        
+#         Mean square error is the loss used
         loss = loss_fn(Y_pred, Y)
         
         if t % 10 == 0:
