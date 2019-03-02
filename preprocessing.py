@@ -63,7 +63,8 @@ for i in bb:
         mix=np.vstack((mix,jo))
 elapsed=time.time()-start       
 idx = np.argsort(mix[:,1], kind = "stable")
-gt = mix[idx]
+
+tot = mix[idx]
 
 
 
