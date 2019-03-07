@@ -10,9 +10,9 @@ This is the project repo for the W19 CS230 Deep Learning course at Stanford.
     * [Recurrent Convolutional Neural Network for Object Recognition](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Liang_Recurrent_Convolutional_Neural_2015_CVPR_paper.pdf)
     * [Gated Recurrent Convolution Neural Network for OCR](https://papers.nips.cc/paper/6637-gated-recurrent-convolution-neural-network-for-ocr.pdf)
     * [Visual Depth Mapping from Monocular Images using Recurrent Convolutional Neural Networks](https://arxiv.org/pdf/1812.04082.pdf)
-    * [Tracking of Humans in Video Stream using LSTM Recurrent Neural Network] (http://www.diva-portal.org/smash/get/diva2:1156631/FULLTEXT01.pdf)
-    * [Simple Online and Realtime Tracking (SORT)] (https://arxiv.org/pdf/1602.00763.pdf) 
-    * [Understanding and Diagnosing Visual Tracking Systems] (https://arxiv.org/pdf/1504.06055.pdf)
+    * [Tracking of Humans in Video Stream using LSTM Recurrent Neural Network](http://www.diva-portal.org/smash/get/diva2:1156631/FULLTEXT01.pdf)
+    * [Simple Online and Realtime Tracking (SORT)](https://arxiv.org/pdf/1602.00763.pdf) 
+    * [Understanding and Diagnosing Visual Tracking Systems](https://arxiv.org/pdf/1504.06055.pdf)
 * Videos/Articles
     * [YOLO Explanation Video, Siraj Raval](https://www.youtube.com/watch?v=4eIBisqx9_g)
     * [YOLO CVPR Presentation, Joseph Redmon](https://www.youtube.com/watch?v=NM6lrxy0bxs)
