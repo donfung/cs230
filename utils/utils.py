@@ -3,6 +3,7 @@ from shapely.geometry import Polygon
 import time
 import scipy
 import math
+import cv2
 
 def load_bbox(input_file='../milestone_progress/sample_results/Venice-2/Venice-2.txt', dataset='otb'):
   data_input = []
@@ -11,15 +12,18 @@ def load_bbox(input_file='../milestone_progress/sample_results/Venice-2/Venice-2
     n_values = 4
   elif dataset == 'mot':
     n_values = 6
+  try:
+    with open(input_file) as f:
+        for line in f:
+            values = line.split(',')
+            #data_input.append(a[:])
+            data_input.append(list(map(float, values[0:n_values])))
+    bbox = np.asarray(data_input).T  
+    return bbox
+  except:
+    print('Could not load file: {}'.format(input_file))
 
-  with open(input_file) as f:
-      for line in f:
-          values = line.split(',')
-          #data_input.append(a[:])
-          data_input.append(list(map(float, values[0:n_values])))
-  bbox = np.asarray(data_input).T  
-  
-  return bbox
+
 
 def create_poly(box):
     x1, y1, x3, y3 = box
