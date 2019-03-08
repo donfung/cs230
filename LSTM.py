@@ -27,7 +27,7 @@ class bboxLSTM(nn.Module):
             for module in self.layers:
                 if module[0] == 'LSTM':
                     if hidden_state == None:
-                        x = module[1](x)
+                        x, next_hidden_state = module[1](x)
                     else:
                         x, next_hidden_state = module[1](x, hidden_state)
                 else:
