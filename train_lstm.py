@@ -7,14 +7,9 @@ from LSTM import bboxLSTM
 from utils import *
 
 num_epochs = 100
-lstm_input_size = 4
-h1 = 4
-batch_size = 1
-output_dim = 4 
-num_layers = 2
 learning_rate = 0.001
 
-model = bboxLSTM(lstm_input_size, h1, batch_size, output_dim, num_layers)
+model = bboxLSTM(path_cfg = 'config/bboxRNN.cfg')
 
 # What is size_average?
 loss_fn = torch.nn.MSELoss(reduction='mean')
@@ -34,7 +29,7 @@ for t in range(num_epochs):
         Y = torch.from_numpy(mat[:,2:6]).type(torch.Tensor)
         X = X.view((-1,1,X.shape[1]))
         Y = Y.view((-1,1,X.shape[1]))  
-        Y_pred = model(X)    
+        Y_pred, _ = model(X)    
         
 #         Mean square error is the loss used
         loss = loss_fn(Y_pred, Y)
