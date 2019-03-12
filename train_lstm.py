@@ -6,15 +6,11 @@ import matplotlib.pyplot as plt
 from LSTM import bboxLSTM
 from utils import *
 
-num_epochs = 100
+
+num_epochs = 50
 learning_rate = 0.001
 
 model = bboxLSTM(path_to_cfg)
-
-# What is size_average?
-# INSERT CLASS DEFINED BY DON
-loss_fn 
-
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
