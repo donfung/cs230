@@ -12,12 +12,12 @@ import LSTM.bboxLSTM
 
 if __name__ == "__name__":
     
-    # YOLO/CNN
+    # Load weights and configuration for YOLO and LSTM
     yolo_weights = 'config/yolo.weights'
     yolo_cfg = 'config/yolo.pt' 
     lstm_weights = 'config/lstm.pt' # path to trained lstm state_dict
     lstm_cfg = 'config/bboxRNN.cfg' 
-   
+       
 
     lstm_model = bboxLSTM(lstm_input_size, h1, batch_size, output_dim, num_layers) # Not sure what to put for these inputs
     lstm_model.load_state_dict(torch.load(lstm_weights)) # Load weights
