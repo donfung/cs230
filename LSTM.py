@@ -23,14 +23,12 @@ class bboxLSTM(nn.Module):
     
     def forward(self, input, is_training = False, hidden_state = None):
         x  = input
-        if is_training:
-            for module in self.layers:
-                if module[0] == 'LSTM':
-                    if hidden_state == None:
-                        x, next_hidden_state = module[1](x)
-                    else:
-                        x, next_hidden_state = module[1](x, hidden_state)
+        for module in self.layers:
+            if module[0] == 'LSTM':
+                if hidden_state == None:
+                    x, next_hidden_state = module[1](x)
                 else:
-                    x = module[1](x)
-        
+                    x, next_hidden_state = module[1](x, hidden_state)
+            else:
+                x = module[1](x)
         return x, next_hidden_state
