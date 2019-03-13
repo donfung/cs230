@@ -13,8 +13,7 @@ class stability_mse_loss(object):
         Loss_cpos = self.center_pos_error(y_pred, y_gt)
         Loss_sratio = self.scale_ratio_error(y_pred, y_gt)
         Loss = (Loss_MSE + Loss_cpos + Loss_sratio)
-     
-        print("CenterPos = {}. ScaleRatio = {}. MSE = {}".format(Loss_cpos, Loss_sratio, Loss_MSE))    
+#         print("CenterPos = {}. ScaleRatio = {}. MSE = {}".format(Loss_cpos, Loss_sratio, Loss_MSE))    
         return Loss
 
     # Reference: https://arxiv.org/pdf/1611.06467.pdf

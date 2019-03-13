@@ -50,7 +50,6 @@ hist = np.zeros(num_epochs)
 # Actual Training
 for t in range(num_epochs):
         for i in range(num):
-            print(i)
             X_cur = X[i]
             Y_cur = Y[i]
             
@@ -58,9 +57,10 @@ for t in range(num_epochs):
             Y_pred[Y_pred<=0] = 0.01
             #             loss = loss_fn(Y_pred.double(), Y_cur)
             loss = loss_fn.calculate_loss(Y_pred.double(), Y_cur)
-            print("Epoch ", t, "MSE: ", loss.item())
 
             hist[t] = loss.item()
             optimiser.zero_grad()
             loss.backward()
             optimiser.step()
+        
+        print("Epoch ", t, "MSE: ", loss.item())
