@@ -14,7 +14,6 @@ class bboxLSTM(nn.Module):
         self.linear2 = nn.Linear(in_features = self.layer_list[1]['in_features'], out_features = self.layer_list[1]['out_features'])
         self.LSTM = nn.LSTM(input_size = self.layer_list[2]['input_size'], hidden_size = self.layer_list[2]['hidden_size'], num_layers = self.layer_list[2]['num_layers']) 
         self.linear3 = nn.Linear(in_features = self.layer_list[3]['in_features'], out_features = self.layer_list[3]['out_features'])
-        
         """
         layers = []
         for layer in self.layer_list:
