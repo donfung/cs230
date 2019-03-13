@@ -32,7 +32,7 @@ for filename in os.listdir(path):
             Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1))
             num = num + 1
 
-num_epochs = 30
+num_epochs = 500
 learning_rate = 0.0001
 path_to_cfg = "/Users/prerna/Documents/MastersQ2/CS230/cs230/config/bboxRNN.cfg"
 
@@ -49,6 +49,7 @@ hist = np.zeros(num_epochs)
 
 # Actual Training
 for t in range(num_epochs):
+        loss_val = []
         for i in range(num):
             X_cur = X[i]
             Y_cur = Y[i]
@@ -57,10 +58,10 @@ for t in range(num_epochs):
             Y_pred[Y_pred<=0] = 0.01
             #             loss = loss_fn(Y_pred.double(), Y_cur)
             loss = loss_fn.calculate_loss(Y_pred.double(), Y_cur)
-
+            loss_val.append(loss.item())
             hist[t] = loss.item()
             optimiser.zero_grad()
             loss.backward()
             optimiser.step()
-        
-        print("Epoch ", t, "MSE: ", loss.item())
+        Loss_tot = sum(loss_val)
+        print("Epoch ", t, "Loss: ", Loss_tot)
