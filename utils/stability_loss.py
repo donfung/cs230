@@ -3,15 +3,18 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class stability_mse_loss:
+class stability_mse_loss(object):
     def __init__(self):
         self.MSE = nn.MSELoss(reduction = 'mean')
-        
+        print('asd')        
+
     def calculate_loss(self, y_pred, y_gt):
         Loss_MSE = self.MSE(y_pred, y_gt)
         Loss_cpos = self.center_pos_error(y_pred, y_gt)
         Loss_sratio = self.scale_ratio_error(y_pred, y_gt)
         Loss = (Loss_MSE + Loss_cpos + Loss_sratio)
+     
+        print("CenterPos = {}. ScaleRatio = {}. MSE = {}".format(Loss_cpos, Loss_sratio, Loss_MSE))    
         return Loss
 
     # Reference: https://arxiv.org/pdf/1611.06467.pdf
@@ -37,12 +40,12 @@ class stability_mse_loss:
 
         x_error = (x_cg_pred - x_cg_gt)/b_pred
         y_error = (y_cg_pred - y_cg_gt)/h_pred
-
+       
         std_x = torch.std(x_error)
         std_y = torch.std(y_error)
 
         cp_error = std_x + std_y 
-  
+        
         return cp_error
 
 
@@ -64,7 +67,7 @@ class stability_mse_loss:
         scale_error = torch.sqrt(b_pred*h_pred/(b_gt*h_gt))
         ratio_error = (b_pred/h_pred)/(b_gt/h_gt)
     
-    
+        #print("b_pred = {}, h_pred = {}, b_gt = {}, h_gt = {}".format(b_pred, h_pred, b_gt, h_gt))
         sigma_s = torch.std(scale_error)
         sigma_r = torch.std(ratio_error)
     
