@@ -6,7 +6,7 @@ from sys import platform
 
 from models import *
 from utils.datasets import *
-from utils.utils import *
+from utils.utils2 import *
 
 
 def detect(
@@ -50,7 +50,8 @@ def detect(
     # Get classes and colors
     classes = load_classes(parse_data_cfg('cfg/coco_orig.data')['names'])
     colors = [[random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)] for _ in range(len(classes))]
-
+    
+    bbox_array = [0,0,0,0,0,0]
     for i, (path, img, im0) in enumerate(dataloader):
         t = time.time()
         if webcam:
@@ -64,9 +65,10 @@ def detect(
         if ONNX_EXPORT:
             torch.onnx.export(model, img, 'weights/model.onnx', verbose=True)
             return
-        pred = model(img)
+        #pred = model(img)
+        pred, a_val = model(img)
         pred = pred[pred[:, :, 4] > conf_thres]  # remove boxes < threshold
-
+    
         if len(pred) > 0:
             # Run NMS on predictions
             detections = non_max_suppression(pred.unsqueeze(0), conf_thres, nms_thres)[0]
@@ -85,16 +87,23 @@ def detect(
             # Draw bounding boxes and labels of detections
             for x1, y1, x2, y2, conf, cls_conf, cls in detections:
                 if (cls==0):
+                    new_bbox_array = np.asarray([x1.cpu().detach().numpy(),y1.cpu().detach().numpy(),
+                                                x2.cpu().detach().numpy(),y2.cpu().detach().numpy(),
+                                                cls.cpu().detach().numpy(),
+                                                cls_conf.cpu().detach().numpy()*conf.cpu().detach().numpy()])
+                    bbox_array = np.vstack([bbox_array,new_bbox_array])
+                    #bbox_array = np.vstack([bbox_array,[x1,y1,x2,y2,cls,cls_conf*conf]])
                     if save_txt:  # Write to file
                         with open(save_path + '.txt', 'a') as file:
                             file.write('%g %g %g %g %g %g\n' %
                                        (x1, y1, x2, y2, cls, cls_conf * conf))
-
                 # Add bbox to the image
                 if (cls==0):
                     label = '%s %.2f' % (classes[int(cls)], conf)
                     plot_one_box([x1, y1, x2, y2], im0, label=label, color=colors[int(cls)])
-
+        
+        bbox_array = np.delete(bbox_array, 0, 0)
+        
         dt = time.time() - t
         print('Done. (%.3fs)' % dt)
 
@@ -103,6 +112,8 @@ def detect(
 
         if webcam:  # Show live webcam
             cv2.imshow(weights, im0)
-
+        
     if save_images and (platform == 'darwin'):  # linux/macos
         os.system('open ' + output + ' ' + save_path)
+    
+    return a_val,bbox_array
