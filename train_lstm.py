@@ -25,21 +25,21 @@ Y[0] = torch.tensor(np.expand_dims(Data1[:itemindex[0][0],0:4],1))
 
 itemindex = np.where(Data2 == a)
 X[1] = torch.tensor(np.expand_dims(Data2[:itemindex[0][0],4:],1))
-Y[1] = torch.tensor(np.expand_dims(Data1[:itemindex[0][0],0:4],1))
+Y[1] = torch.tensor(np.expand_dims(Data2[:itemindex[0][0],0:4],1))
 
 itemindex = np.where(Data3 == a)
 X[2] = torch.tensor(np.expand_dims(Data3[:itemindex[0][0],4:],1))
-Y[2] = torch.tensor(np.expand_dims(Data1[:itemindex[0][0],0:4],1))
+Y[2] = torch.tensor(np.expand_dims(Data3[:itemindex[0][0],0:4],1))
 
-num_epochs = 50
-learning_rate = 0.001
+num_epochs = 30
+learning_rate = 0.0001
 path_to_cfg = "/Users/prerna/Documents/MastersQ2/CS230/cs230/config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
 
 # Creating an instance of the custom loss function
-loss_fn = nn.MSELoss(reduction = 'sum')
-# loss_fn = stability_mse_loss()
+# loss_fn = nn.MSELoss(reduction = 'sum')
+loss_fn = stability_mse_loss()
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -54,8 +54,8 @@ for t in range(num_epochs):
             
             Y_pred, hidden_state = model(X_cur)
             
-            loss = loss_fn(Y_pred.double(), Y_cur)
-#             loss = loss_fn.calculate_loss(Y_pred.double(), Y_cur)
+#             loss = loss_fn(Y_pred.double(), Y_cur)
+            loss = loss_fn.calculate_loss(Y_pred.double(), Y_cur)
             print("Epoch ", t, "MSE: ", loss.item())
             
             hist[t] = loss.item()
