@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class stability_mse_loss :
-    def __init__(self)
+class stability_mse_loss:
+    def __init__(self):
         self.MSE = nn.MSELoss(reduction = 'mean')
         
     def calculate_loss(self, y_pred, y_gt):
@@ -20,15 +20,15 @@ class stability_mse_loss :
 
         #assert bbox_pred_traj.shape == bbox_gt_traj.shape, "Predicted and ground truth size mismatch: {} =/ {}".format(bbox_pred_traj.shape, bbox_gt_traj.shape)
     
-        x_pred = bbox_pred[:,0] 
-        y_pred = bbox_pred[:,1] 
-        b_pred = bbox_pred[:,2]
-        h_pred = bbox_pred[:,3]
+        x_pred = bbox_pred[:,0,0] 
+        y_pred = bbox_pred[:,0,1] 
+        b_pred = bbox_pred[:,0,2]
+        h_pred = bbox_pred[:,0,3]
 
-        x_gt = bbox_gt[:,0]
-        y_gt = bbox_gt[:,1]
-        b_gt = bbox_gt[:,2]
-        h_gt = bbox_gt[:,3]
+        x_gt = bbox_gt[:,0,0]
+        y_gt = bbox_gt[:,0,1]
+        b_gt = bbox_gt[:,0,2]
+        h_gt = bbox_gt[:,0,3]
         
         x_cg_pred = (x_pred + b_pred)/2
         y_cg_pred = (y_pred + h_pred)/2
@@ -51,15 +51,15 @@ class stability_mse_loss :
 
         #assert bbox_pred_traj.shape == bbox_gt_traj.shape, "Predicted and ground truth size mismatch: {} =/ {}".format(bbox_pred_traj.shape, bbox_gt_traj.shape)
         
-        x_pred = bbox_pred[:,0] 
-        y_pred = bbox_pred[:,1] 
-        b_pred = bbox_pred[:,2]
-        h_pred = bbox_pred[:,3]
+        x_pred = bbox_pred[:,0,0] 
+        y_pred = bbox_pred[:,0,1] 
+        b_pred = bbox_pred[:,0,2]
+        h_pred = bbox_pred[:,0,3]
 
-        x_gt = bbox_gt[:,0]
-        y_gt = bbox_gt[:,1]
-        b_gt = bbox_gt[:,2]
-        h_gt = bbox_gt[:,3]
+        x_gt = bbox_gt[:,0,0]
+        y_gt = bbox_gt[:,0,1]
+        b_gt = bbox_gt[:,0,2]
+        h_gt = bbox_gt[:,0,3]
 
         scale_error = np.sqrt(b_pred*h_pred/(b_gt*h_gt))
         ratio_error = (b_pred/h_pred)/(b_gt/h_gt)
