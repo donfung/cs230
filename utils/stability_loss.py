@@ -61,7 +61,7 @@ class stability_mse_loss:
         b_gt = bbox_gt[:,0,2]
         h_gt = bbox_gt[:,0,3]
 
-        scale_error = np.sqrt(b_pred*h_pred/(b_gt*h_gt))
+        scale_error = torch.sqrt(b_pred*h_pred/(b_gt*h_gt))
         ratio_error = (b_pred/h_pred)/(b_gt/h_gt)
     
     
