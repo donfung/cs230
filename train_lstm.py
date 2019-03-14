@@ -35,7 +35,7 @@ for filename in os.listdir(path):
             Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
             num = num + 1
 
-num_epochs = 500
+num_epochs = 50000
 learning_rate = 0.0001
 path_to_cfg = "config/bboxRNN.cfg"
 
