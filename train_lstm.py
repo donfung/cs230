@@ -63,7 +63,6 @@ for t in range(num_epochs):
             Y_pred = Y_pred.double()
             loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
             loss_val.append(loss.item())
-            hist[t] = loss.item()
             optimiser.zero_grad()
             loss.backward()
             optimiser.step()
