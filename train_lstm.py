@@ -15,7 +15,7 @@ Y = {}
 
 # Loading Data 
 a = np.zeros((1,2712))
-path = "/Users/prerna/Documents/MastersQ2/CS230/Data/inter/"
+path = "inter/"
 
 num = 0
 for filename in os.listdir(path):
@@ -33,8 +33,8 @@ for filename in os.listdir(path):
             num = num + 1
 
 num_epochs = 500
-learning_rate = 0.0001
-path_to_cfg = "/Users/prerna/Documents/MastersQ2/CS230/cs230/config/bboxRNN.cfg"
+learning_rate = 0.00001
+path_to_cfg = "config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
 
@@ -45,8 +45,7 @@ loss_fn = stability_mse_loss()
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-hist = np.zeros(num_epochs)
-
+L = []
 # Actual Training
 for t in range(num_epochs):
         loss_val = []
@@ -64,4 +63,10 @@ for t in range(num_epochs):
             loss.backward()
             optimiser.step()
         Loss_tot = sum(loss_val)
+        L.append(Loss_tot)
         print("Epoch ", t, "Loss: ", Loss_tot)
+
+path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
+path_loss_save = "output/" + "Loss" +str(learning_rate)+ '_'+ str(num_epochs) + ".csv"
+np.savetxt(path_loss_save, np.array(L))
+torch.save(model.state_dict(), path_parameter_save)
