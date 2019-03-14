@@ -9,11 +9,14 @@ from LSTM import bboxLSTM
 from utils.stability_loss import *
 from utils.model_parser import * 
 
+# Setting device
+cuda = torch.cuda.is_available()
+device = torch.device('cuda:0' if cuda else 'cpu')
 
+# Loading Data 
 X = {}
 Y = {}
 
-# Loading Data 
 a = np.zeros((1,2712))
 path = "inter/"
 
@@ -24,12 +27,12 @@ for filename in os.listdir(path):
         Data = np.loadtxt(path+filename)
         if a in Data:
             itemindex = np.where(Data == a)
-            X[num] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],4:],1))
-            Y[num] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],0:4],1))
+            X[num] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],4:],1)).to(device)
+            Y[num] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],0:4],1)).to(device)
             num = num + 1
         else:
-            X[num] = torch.tensor(np.expand_dims(Data[:,4:],1))
-            Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1))
+            X[num] = torch.tensor(np.expand_dims(Data[:,4:],1)).to(device)
+            Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
             num = num + 1
 
 num_epochs = 500
@@ -37,6 +40,7 @@ learning_rate = 0.00001
 path_to_cfg = "config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
+model.to(device).train()
 
 # Creating an instance of the custom loss function
 # loss_fn = nn.MSELoss(reduction = 'sum')
@@ -56,7 +60,8 @@ for t in range(num_epochs):
             Y_pred, hidden_state = model(X_cur)
             Y_pred[Y_pred<=0] = 0.01
             #             loss = loss_fn(Y_pred.double(), Y_cur)
-            loss = loss_fn.calculate_loss(Y_pred.double(), Y_cur)
+            Y_pred = Y_pred.double()
+            loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
             loss_val.append(loss.item())
             hist[t] = loss.item()
             optimiser.zero_grad()
