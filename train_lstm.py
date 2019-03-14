@@ -36,15 +36,15 @@ for filename in os.listdir(path):
             num = num + 1
 
 num_epochs = 500
-learning_rate = 0.00001
+learning_rate = 0.0001
 path_to_cfg = "config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
 model.to(device).train()
 
 # Creating an instance of the custom loss function
-# loss_fn = nn.MSELoss(reduction = 'sum')
-loss_fn = stability_mse_loss()
+loss_fn = nn.MSELoss(reduction = 'sum')
+# loss_fn = stability_mse_loss()
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -59,9 +59,9 @@ for t in range(num_epochs):
             
             Y_pred, hidden_state = model(X_cur)
             Y_pred[Y_pred<=0] = 0.01
-            #             loss = loss_fn(Y_pred.double(), Y_cur)
             Y_pred = Y_pred.double()
-            loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
+#             loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
+            loss = loss_fn(Y_pred.double(), Y_cur)
             loss_val.append(loss.item())
             optimiser.zero_grad()
             loss.backward()
