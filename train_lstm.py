@@ -9,6 +9,14 @@ from LSTM import bboxLSTM
 from utils.stability_loss import *
 from utils.model_parser import * 
 
+# If analyze on TensorBoard
+use_tensorboard = True
+if use_tensorboard == True:
+    from tensorboardX import SummaryWriter
+    board = SummaryWriter()
+
+
+
 # Setting device
 cuda = torch.cuda.is_available()
 device = torch.device('cuda:0' if cuda else 'cpu')
@@ -69,6 +77,10 @@ for t in range(num_epochs):
         Loss_tot = sum(loss_val)
         L.append(Loss_tot)
         print("Epoch ", t, "Loss: ", Loss_tot)
+        if use_tensorboard:
+            board.add_scalar('Loss per epoch', Loss_tot, t)
+
+writer.close() if use_tensorboard else None  # Closes tensorboard, else do nothing
 
 path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
 path_loss_save = "output/" + "Loss" +str(learning_rate)+ '_'+ str(num_epochs) + ".csv"
