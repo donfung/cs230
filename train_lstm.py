@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+
+
 # import matplotlib.pyplot as plt
 from LSTM import bboxLSTM
 from utils.stability_loss import *
@@ -43,8 +45,8 @@ for filename in os.listdir(path):
             Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
             num = num + 1
 
-num_epochs = 50000
-learning_rate = 0.0001
+num_epochs = 5
+learning_rate = 0.01
 path_to_cfg = "config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
@@ -56,17 +58,18 @@ loss_fn = nn.MSELoss(reduction = 'sum')
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.99)
 
 L = []
 # Actual Training
-for t in range(num_epochs):
+for t in range(num_epochs):            
         loss_val = []
         for i in range(num):
             X_cur = X[i]
             Y_cur = Y[i]
             
             Y_pred, hidden_state = model(X_cur)
-            Y_pred[Y_pred<=0] = 0.01
+            Y_pred[Y_pred<=0] = 0.0001
             Y_pred = Y_pred.double()
 #             loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
             loss = loss_fn(Y_pred.double(), Y_cur)
