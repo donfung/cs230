@@ -46,7 +46,7 @@ for filename in os.listdir(path):
             num = num + 1
 
 num_epochs = 5
-learning_rate = 0.01
+learning_rate = 0.001
 path_to_cfg = "config/bboxRNN.cfg"
 
 model = bboxLSTM(path_to_cfg)
