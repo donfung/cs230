@@ -45,7 +45,7 @@ for filename in os.listdir(path):
             Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
             num = num + 1
 
-num_epochs = 50
+num_epochs = 500
 learning_rate = 0.001
 path_to_cfg = "config/bboxRNN.cfg"
 
@@ -59,6 +59,7 @@ loss_fn = nn.MSELoss(reduction = 'mean')
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.99)
+path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
 
 L = []
 # Actual Training
@@ -80,12 +81,14 @@ for t in range(num_epochs):
         Loss_tot = sum(loss_val)
         L.append(Loss_tot)
         print("Epoch ", t, "Loss: ", Loss_tot)
+        if t%1000 == 0:
+            torch.save(model.state_dict(), path_parameter_save)
         if use_tensorboard:
             board.add_scalar('Loss per epoch', Loss_tot, t)
 
 board.close() if use_tensorboard else None  # Closes tensorboard, else do nothing
 
-path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
+
 path_loss_save = "output/" + "Loss" +str(learning_rate)+ '_'+ str(num_epochs) + ".csv"
 np.savetxt(path_loss_save, np.array(L))
 torch.save(model.state_dict(), path_parameter_save)
