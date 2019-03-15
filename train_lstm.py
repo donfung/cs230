@@ -58,7 +58,7 @@ loss_fn = nn.MSELoss(reduction = 'mean')
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.99)
+scheduler = torch.optim.lr_scheduler.StepLR(optimiser, step_size=20, gamma=0.99)
 path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
 
 L = []
