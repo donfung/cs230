@@ -46,3 +46,24 @@ class bboxLSTM(nn.Module):
                 x = module[1](x)
         """
         return x, next_hidden_state
+
+class skip_bboxLSTM(nn.Module):
+    def __init__(self, path_cfg):
+        super(bboxLSTM, self).__init__()
+        self.layer_list = parse_model_cfg(path_cfg)
+        
+        self.linear1 = nn.Linear(in_features = self.layer_list[0]['in_features'], out_features = self.layer_list[0]['out_features'])
+        self.linear2 = nn.Linear(in_features = self.layer_list[1]['in_features'], out_features = self.layer_list[1]['out_features'])
+        self.LSTM = nn.LSTM(input_size = self.layer_list[2]['input_size'], hidden_size = self.layer_list[2]['hidden_size'], num_layers = self.layer_list[2]['num_layers']) 
+        self.linear3 = nn.Linear(in_features = self.layer_list[3]['in_features'], out_features = self.layer_list[3]['out_features'])
+    
+    def forward(self, input, hidden_state = None):
+        x_skip = input[:,:,0:4].float()
+        x = self.linear1(input.float())
+        x = self.linear2(x)
+        if hidden_state == None:
+            x, next_hidden_state = self.LSTM(x)
+        else:
+            x, next_hidden_state = self.LSTM(x, hidden_state)
+        x = self.linear3(x) + x_skip
+        return x, next_hidden_state
