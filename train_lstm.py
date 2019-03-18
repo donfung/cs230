@@ -46,6 +46,7 @@ for filename in os.listdir(path):
 
 X_val = {}
 Y_val = {}
+path_val = "validation/"
 
 num_val = 0
 for filename in os.listdir(path_val):
@@ -85,7 +86,6 @@ loss_fn = stability_mse_loss()
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = torch.optim.lr_scheduler.StepLR(optimiser, step_size=20, gamma=0.99)
-path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
 
 L = []
 # Actual Training
@@ -96,7 +96,6 @@ for t in range(num_epochs):
             Y_cur = Y[i]
             
             Y_pred, hidden_state = model(X_cur)
-            Y_pred[Y_pred<=0] = 0.0001
             Y_pred = Y_pred.double()
             loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
 #             loss = loss_fn(Y_pred.double(), Y_cur)
@@ -129,7 +128,7 @@ for t in range(num_epochs):
 
 board.close() if use_tensorboard else None  # Closes tensorboard, else do nothing
 
-
+path_parameter_save = "output/" + "latest" +str(learning_rate)+ '_'+ str(num_epochs) + ".pt"
 path_loss_save = "output/" + "Loss" +str(learning_rate)+ '_'+ str(num_epochs) + ".csv"
 np.savetxt(path_loss_save, np.array(L))
 torch.save(model.state_dict(), path_parameter_save)
