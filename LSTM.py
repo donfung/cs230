@@ -2,7 +2,23 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from utils.model_parser import * 
+
+def parse_model_cfg(path):
+    """Parses the RNN layer configuration file and returns module definitions"""
+    file = open(path, 'r')
+    lines = file.read().split('\n')
+    lines = [x for x in lines if x and not x.startswith('#')]
+    lines = [x.rstrip().lstrip() for x in lines]  # get rid of fringe whitespaces
+    module_defs = []
+    for line in lines:
+        if line.startswith('['):  # This marks the start of a new block
+            module_defs.append({})
+            module_defs[-1]['type'] = line[1:-1].rstrip()
+        else:
+            key, value = line.split("=")
+            value = value.strip()
+            module_defs[-1][key.rstrip()] = int(value)
+    return module_defs
 
 # Constructing the model
 class bboxLSTM(nn.Module):
@@ -49,7 +65,7 @@ class bboxLSTM(nn.Module):
 
 class skip_bboxLSTM(nn.Module):
     def __init__(self, path_cfg):
-        super(bboxLSTM, self).__init__()
+        super(skip_bboxLSTM, self).__init__()
         self.layer_list = parse_model_cfg(path_cfg)
         
         self.linear1 = nn.Linear(in_features = self.layer_list[0]['in_features'], out_features = self.layer_list[0]['out_features'])

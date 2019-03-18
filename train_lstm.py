@@ -9,7 +9,6 @@ import torch.optim as optim
 # import matplotlib.pyplot as plt
 from LSTM import bboxLSTM
 from utils.stability_loss import *
-from utils.model_parser import * 
 
 # If analyze on TensorBoard
 use_tensorboard = True
@@ -17,13 +16,13 @@ if use_tensorboard == True:
     from tensorboardX import SummaryWriter
     board = SummaryWriter()
 
-
-
 # Setting device
 cuda = torch.cuda.is_available()
 device = torch.device('cuda:0' if cuda else 'cpu')
 
-# Loading Data 
+###############################################################################
+################### Loading training and Validation data ###################### 
+############################################################################### 
 X = {}
 Y = {}
 
@@ -45,16 +44,43 @@ for filename in os.listdir(path):
             Y[num] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
             num = num + 1
 
-num_epochs = 500
+X_val = {}
+Y_val = {}
+
+num_val = 0
+for filename in os.listdir(path_val):
+    if '.csv' in filename:
+        print("Number of validation files: {}".format(num_val))
+        Data = np.loadtxt(path_val+filename)
+        if a in Data:
+            itemindex = np.where(Data == a)
+            X_val[num_val] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],4:],1)).to(device)
+            Y_val[num_val] = torch.tensor(np.expand_dims(Data[:itemindex[0][0],0:4],1)).to(device)
+            num_val += 1
+        else:
+            X_val[num_val] = torch.tensor(np.expand_dims(Data[:,4:],1)).to(device)
+            Y_val[num_val] = torch.tensor(np.expand_dims(Data[:,0:4],1)).to(device)
+            num_val += 1
+
+
+
+###############################################################################
+########################### Parameters for model ############################## 
+############################################################################### 
+
+num_epochs = 10000
 learning_rate = 0.001
 path_to_cfg = "config/bboxRNN.cfg"
 
-model = bboxLSTM(path_to_cfg)
+model = skip_bboxLSTM(path_to_cfg)
+
+checkpoint = torch.load("latest0.001_25000.pt", map_location='cpu')
+
 model.to(device).train()
 
 # Creating an instance of the custom loss function
-loss_fn = nn.MSELoss(reduction = 'mean')
-# loss_fn = stability_mse_loss()
+# loss_fn = nn.MSELoss(reduction = 'mean')
+loss_fn = stability_mse_loss()
 
 #Using Adam optimizer
 optimiser = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -72,19 +98,34 @@ for t in range(num_epochs):
             Y_pred, hidden_state = model(X_cur)
             Y_pred[Y_pred<=0] = 0.0001
             Y_pred = Y_pred.double()
-#             loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
-            loss = loss_fn(Y_pred.double(), Y_cur)
+            loss = loss_fn.calculate_loss(Y_pred.to(device), Y_cur)
+#             loss = loss_fn(Y_pred.double(), Y_cur)
             loss_val.append(loss.item())
             optimiser.zero_grad()
             loss.backward()
             optimiser.step()
-        Loss_tot = sum(loss_val)
+        Loss_tot = np.mean(loss_val)
         L.append(Loss_tot)
         print("Epoch ", t, "Loss: ", Loss_tot)
-        if t%1000 == 0:
+        if t%10 == 0:
+            path_parameter_save = "skipLSTM" +str(learning_rate)+ '_'+ str(t) + ".pt"
             torch.save(model.state_dict(), path_parameter_save)
+            print("Saved at Epoch #{}".format(t))
+        
+        for j in range(num_val):
+            with torch.no_grad():
+                X_cur_val = X_val[j]
+                Y_cur_val = Y_val[j]
+                Y_pred_val, hidden_state_val = model(X_cur_val)
+                Y_pred_val = Y_pred_val.double()
+                loss_from_val = loss_fn(Y_pred_val, Y_cur_val)
+                loss_from_validation.append(loss_from_val.item())
+        validation_loss_total = np.mean(loss_from_validation)
+        L_val.append(validation_loss_total)
+
         if use_tensorboard:
-            board.add_scalar('Loss per epoch', Loss_tot, t)
+            board.add_scalar('Mean loss per epoch', Loss_tot, t)
+            board.add_scalar('Validation loss', validation_loss_total, t)
 
 board.close() if use_tensorboard else None  # Closes tensorboard, else do nothing
 
